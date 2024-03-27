@@ -1,42 +1,54 @@
-// Get the video element by its ID
+// Get references to DOM elements
 const video = document.getElementById('video');
 const container = document.querySelector('.container');
 
-// Load the necessary faceapi models
+// Load all necessary FaceAPI models
 Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('models'),
-    faceapi.nets.faceExpressionNet.loadFromUri('models')
+ faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+ faceapi.nets.faceLandmark68Net.loadFromUri('models'),
+ faceapi.nets.faceRecognitionNet.loadFromUri('models'),
+ faceapi.nets.faceExpressionNet.loadFromUri('models')
 ]).then(startVideo);
-
 
 // Function to start the video stream
 async function startVideo() {
-    try {
-        // Use getUserMedia to access the user's camera
-        const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-        video.srcObject = stream; // If successful, set the video stream as the source
-    } catch (err) {
-        console.error('Error accessing camera:', err); // If there's an error, log it to the console
-    }
+ try {
+   // Get access to the user's camera
+   const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+   video.srcObject = stream; // Set the video stream as the video source
+ } catch (err) {
+   console.error('Error accessing camera:', err);
+ }
 }
 
 // Event listener for when the video starts playing
 video.addEventListener('play', () => {
-    // Create a canvas element to draw the face detection results
-    const canvas = faceapi.createCanvasFromMedia(video);
-    container.append(canvas); // Append the canvas to the body
-    const displaySize = { width: video.width, height: video.height }; // Set the display size to match the video's dimensions
-    faceapi.matchDimensions(canvas, displaySize); // Match the canvas dimensions to the display size
+ // Create a canvas element to draw face detection results
+ const canvas = faceapi.createCanvasFromMedia(video);
+ container.append(canvas); // Append the canvas to the container
 
-    setInterval(async () => {
-        // Detect faces in the video stream using the TinyFaceDetector
-        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions();
-        const resizedDetections = faceapi.resizeResults(detections, displaySize); // Resize the detection results to match the display size
-        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas before drawing new results
-        faceapi.draw.drawDetections(canvas, resizedDetections); // Draw the face detections on the canvas
-        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections); // Draw the face landmarks (e.g., eyes, nose, mouth) on the canvas
-        faceapi.draw.drawFaceExpressions(canvas, resizedDetections); // Draw the face expressions (e.g., happy, sad) on the canvas
-    }, 100); // Repeat the detection process every 100 milliseconds
+ // Get video dimensions and match canvas dimensions
+ const { width, height } = video;
+ faceapi.matchDimensions(canvas, { width, height });
+
+ // Set up a repeating interval to detect faces
+ const intervalId = setInterval(async () => {
+   // Detect faces in the video stream
+   const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+     .withFaceLandmarks()
+     .withFaceExpressions();
+   const resizedDetections = faceapi.resizeResults(detections, { width, height });
+
+   // Clear the canvas before drawing new results
+   const ctx = canvas.getContext('2d');
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+   // Draw face detections, landmarks, and expressions on the canvas
+   faceapi.draw.drawDetections(canvas, resizedDetections);
+   faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+   faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+ }, 100); // Repeat every 100 milliseconds
+
+ // Clear the interval when video is paused
+ video.addEventListener('pause', () => clearInterval(intervalId));
 });
