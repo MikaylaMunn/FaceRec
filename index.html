@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character set and viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title of the document -->
+    <title>Face Detection and Expression Recognition</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <!-- Heading for the application -->
+    <h1>Real-Time Face Detection and Expression Recognition</h1>
+    <!-- Description of the application -->
+    <p>This application uses your device's camera to detect faces and recognize facial expressions in real-time. Please make sure to allow camera access when prompted by your browser.</p>
+    <!-- Container for the video element -->
+    <div class="container">
+        <!-- Video element for displaying the camera feed -->
+        <video id="video" width="720" height="560" autoplay muted></video>
+    </div>
+    <!-- Script tags for loading face-api.js and main.js -->
+    <script src="face-api.min.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
