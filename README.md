@@ -24,3 +24,4 @@ To run this application, you need a web browser that supports the `getUserMedia`
 ### Note
 - This project is for demonstration purposes and may require additional setup (such as serving the files from a web server) for full functionality in some environments.
 - Make sure to include the `face-api.js` library in your project for the code to work correctly.
+- This was a code-along activity may add in additional features later.
