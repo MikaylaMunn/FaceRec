@@ -3,37 +3,46 @@ body {
     text-align: center;
     background-color: #f0f0f0;
     padding: 20px;
+    margin: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
-h1 {
-    color: #333;
-    margin-bottom: 20px;
-}
-
-p {
-    color: #555;
-    line-height: 1.5;
-    margin-bottom: 30px;
-}
-
+/* Container styling */
 .container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column; /* Stack elements vertically by default */
+    align-items: center; /* Center items horizontally */
+    padding: 20px; /* Add padding to the container */
 }
 
 video {
-    width: 720px;
-    height: 560px;
+    width: 100%; /* Make video fill the container */
+    height: auto; /* Maintain aspect ratio */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-right: 10px; /* Add some space between the video and canvas */
+    margin-bottom: 20px; /* Add some space between video and canvas */
 }
 
 canvas {
-    width: 720px;
-    height: 560px;
+    width: 100%; /* Make canvas fill the container */
+    height: auto; /* Maintain aspect ratio */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: #000; /* Black background color */
+}
+
+/* For smaller screens (optional) */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    .container {
+        flex-direction: column; /* Stack elements vertically on smaller screens */
+    }
+
+    video,
+    canvas {
+        width: 90%; /* Increase width on smaller screens */
+        margin-bottom: 20px; /* Add some space between video and canvas */
+    }
 }
